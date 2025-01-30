@@ -1,0 +1,10 @@
+
+# ignore pycaches
+__pycache__/*
+*/__pycache__/*
+
+# ignore image files
+*.jpg
+*.png
+*/*.jpg
+*/*.png

@@ -17,7 +17,7 @@ async def main():
     parser.add_argument("data", help="File Path to Image")
     args = parser.parse_args()
 
-    server_addr = "ws://192.168.1.77:2777"
+    server_addr = "ws://192.168.1.177:1777"
     try: 
         async with websockets.connect(server_addr) as websocket:
             if os.path.exists(args.data):

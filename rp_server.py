@@ -45,7 +45,7 @@ def create_alert(session, alert_data):
         type=alert_json['type'], 
         title=alert_json['title'], 
         description=alert_json['description'], 
-        timestamp=alert_json['timestamp']
+        timestamp=datetime.datetime.now(datetime.timezone.utc)
     )
     session.add(alert_entry)
 
@@ -67,7 +67,7 @@ async def listener(websocket):
             print("ERROR: Unknown Message Type")
 
 async def main():
-    server = await websockets.serve(listener, "localhost", 2777)
+    server = await websockets.serve(listener, "192.168.1.77", 2777)
     await server.wait_closed()
 
 asyncio.run(main())

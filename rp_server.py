@@ -14,7 +14,8 @@ from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
 
-# ALERT INFO: 
+
+# ALERT INFO:
 # Types: 0 = Temp, 1 = pH, 2 = ORP, 3 = Fish Health
 class Alert(Base):
     __tablename__ = 'alerts'
@@ -22,15 +23,20 @@ class Alert(Base):
     type = Column(Integer, nullable=False)
     title = Column(String(100), nullable=False)
     description = Column(String(200), nullable=True)
-    timestamp = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
+    timestamp = Column(
+        DateTime, default=datetime.datetime.now(datetime.timezone.utc))
     read = Column(Boolean, default=False)
 
+
 # Set up the database engine
-engine = create_engine('sqlite:///../fish-flask-app/instance/values.db', echo=False) 
+engine = create_engine(
+    'sqlite:///../fish-flask-app/instance/values.db', echo=False)
 Base.metadata.create_all(engine)
 
 # Create a session to interact with the database
 Session = sessionmaker(bind=engine)
+
+
 @contextmanager
 def session_scope():
     session = Session()
@@ -39,15 +45,17 @@ def session_scope():
     finally:
         session.close()
 
+
 def create_alert(session, alert_data):
     alert_json = json.loads(alert_data)
     alert_entry = Alert(
-        type=alert_json['type'], 
-        title=alert_json['title'], 
-        description=alert_json['description'], 
+        type=alert_json['type'],
+        title=alert_json['title'],
+        description=alert_json['description'],
         timestamp=datetime.datetime.now(datetime.timezone.utc)
     )
     session.add(alert_entry)
+
 
 async def listener(websocket):
     async for message in websocket:
@@ -65,6 +73,7 @@ async def listener(websocket):
                 session.commit()
         else:
             print("ERROR: Unknown Message Type")
+
 
 async def main():
     server = await websockets.serve(listener, "192.168.1.77", 2777)

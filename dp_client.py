@@ -6,8 +6,10 @@ import base64
 import os
 import websockets
 
+
 async def send_alert(websocket, message):
     await websocket.send(f'TEXT:{message}')
+
 
 async def send_heatmap(websocket, image_file_path):
     with open(image_file_path, "rb") as image_file:
@@ -15,14 +17,17 @@ async def send_heatmap(websocket, image_file_path):
         image_data = base64.b64encode(image_data).decode("utf-8")
         await websocket.send(f'IMAGE:{image_data}')
 
+
 async def main():
-    parser = argparse.ArgumentParser(description="Fish Friend's Data Processing Client for Forwarding Heatmap Images or Location-Based Alerts to the Web Server.")
-    parser.add_argument("type", choices=["alert", "heatmap"], help="Type of Message to Send.")
+    parser = argparse.ArgumentParser(
+        description="Fish Friend's Data Processing Client for Forwarding Heatmap Images or Location-Based Alerts to the Web Server.")
+    parser.add_argument(
+        "type", choices=["alert", "heatmap"], help="Type of Message to Send.")
     parser.add_argument("data", help="Alert Text or File Path to Heatmap")
     args = parser.parse_args()
 
     server_addr = "ws://192.168.1.77:2777"
-    try: 
+    try:
         async with websockets.connect(server_addr) as websocket:
             if args.type == "alert":
                 await send_alert(websocket, args.data)

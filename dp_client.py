@@ -9,6 +9,7 @@ import websockets
 
 async def send_alert(websocket, message):
     await websocket.send(f'TEXT:{message}')
+    print(f"[FISH-FRIEND::dp-client::LOG]: sent {message}.")
 
 
 async def send_heatmap(websocket, image_file_path):
@@ -16,6 +17,7 @@ async def send_heatmap(websocket, image_file_path):
         image_data = image_file.read()
         image_data = base64.b64encode(image_data).decode("utf-8")
         await websocket.send(f'IMAGE:{image_data}')
+    print(f"[FISH-FRIEND::dp-client::LOG]: sent {image_file_path}.")
 
 
 async def main():
@@ -38,13 +40,16 @@ async def main():
                     print(f"Error: The file '{args.data}' does not exist.")
                     return
     except websockets.exceptions.ConnectionClosedError:
-        print(f'Connection to {server_addr} Closed Unexpectedly')
+        print(
+            f'[FISH-FRIEND::dp-client::ERR]: connection to {server_addr} closed unexpectedly.')
     except websockets.exceptions.InvalidURI:
-        print(f'Invalid URI: {server_addr}')
+        print(f'[FISH-FRIEND::dp-client::ERR]: invalid URI: {server_addr}.')
     except (websockets.exceptions.WebSocketException, ConnectionRefusedError) as e:
-        print(f'Could not Connect to the Server at {server_addr}: {e}')
+        print(
+            f'[FISH-FRIEND::dp-client::ERR]: could not connect to the server at {server_addr}: {e}.')
     except Exception as e:
-        print(f'An Unexpected Error Occurred: {e}')
+        print(
+            f'[FISH-FRIEND::dp-client::ERR]: an unexpected error occurred: {e}.')
 
 if __name__ == "__main__":
     asyncio.run(main())

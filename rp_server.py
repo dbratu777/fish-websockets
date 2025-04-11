@@ -65,13 +65,19 @@ async def listener(websocket):
             image_file_name = f'../fish-flask-app/static/images/heatmap-{time.time()}.jpg'
             with open(image_file_name, "wb") as image_file:
                 image_file.write(image_data)
+            print(
+                f"[FISH-FRIEND::rp-server::LOG]: received {image_file_name}.")
+
         elif message.startswith("TEXT:"):
             alert_data = message[len("TEXT:"):]
             with session_scope() as session:
                 create_alert(session, alert_data)
                 session.commit()
+            print(f"[FISH-FRIEND::rp-server::LOG]: received {alert_data}.")
+
         else:
-            print("ERROR: Unknown Message Type")
+            print(
+                f"[FISH-FRIEND::rp-server::WARN]: unknown message type - {message}.")
 
 
 async def main():

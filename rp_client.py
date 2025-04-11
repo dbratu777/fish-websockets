@@ -12,6 +12,7 @@ async def send_image(websocket, image_file_path):
         image_data = image_file.read()
         image_data = base64.b64encode(image_data).decode("utf-8")
         await websocket.send(f'IMAGE:{image_data}')
+    print(f"[FISH-FRIEND::rp-client::LOG]: sent {image_file_path}.")
 
 
 async def main():
@@ -26,16 +27,20 @@ async def main():
             if os.path.exists(args.data):
                 await send_image(websocket, args.data)
             else:
-                print(f"Error: The file '{args.data}' does not exist.")
+                print(
+                    f"[FISH-FRIEND::rp-client::ERR]: file '{args.data}' does not exist.")
                 return
     except websockets.exceptions.ConnectionClosedError:
-        print(f'Connection to {server_addr} Closed Unexpectedly')
+        print(
+            f'[FISH-FRIEND::rp-client::ERR]: connection to {server_addr} closed unexpectedly.')
     except websockets.exceptions.InvalidURI:
-        print(f'Invalid URI: {server_addr}')
+        print(f'[FISH-FRIEND::rp-client::ERR]: invalid URI: {server_addr}.')
     except (websockets.exceptions.WebSocketException, ConnectionRefusedError) as e:
-        print(f'Could not Connect to the Server at {server_addr}: {e}')
+        print(
+            f'[FISH-FRIEND::rp-client::ERR]: could not Connect to the server at {server_addr}: {e}.')
     except Exception as e:
-        print(f'An Unexpected Error Occurred: {e}')
+        print(
+            f'[FISH-FRIEND::rp-client::ERR]: an unexpected error occurred: {e}.')
 
 if __name__ == "__main__":
     asyncio.run(main())

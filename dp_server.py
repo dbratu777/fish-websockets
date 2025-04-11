@@ -19,6 +19,9 @@ async def listener(websocket):
             with open(image_file_path, "wb") as image_file:
                 image_file.write(image_data)
 
+            print(
+                f"[FISH-FRIEND::dp-server::LOG]: received {image_file_path}.")
+
             input_path = os.path.join('..', 'fish-websockets', 'received')
             output_path = os.path.join(
                 '..', 'fish-motion-detector', 'datasets', 'test')
@@ -28,9 +31,11 @@ async def listener(websocket):
             try:
                 os.remove(image_file_path)
             except Exception as e:
-                print(f"ERROR: could not delete {image_file_path} - {e}")
+                print(
+                    f"[FISH-FRIEND::dp-server::WARN]: could not delete {image_file_path} - {e}.")
         else:
-            print("ERROR: Unknown Message Type")
+            print(
+                f"[FISH-FRIEND::dp-server::WARN]: unknown message type - {message}.")
 
 
 async def main():
